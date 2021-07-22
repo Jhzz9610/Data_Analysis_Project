@@ -1,6 +1,7 @@
 #data source: https://www.kaggle.com/blastchar/telco-customer-churn
 #Topic:Telco Churn Analysis
 #Language: R
+#Purpose of this project: 1)Find out the key characteristics of churn customers; 2)Build a model for predicting future possible churn
 
 #Load the data
 getwd()
