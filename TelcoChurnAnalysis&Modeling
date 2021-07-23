@@ -6,7 +6,7 @@
 #Load the data
 getwd()
 setwd('C:/Users/Elsazhang/Documents/dataProjects')
-telChurn2<- read.csv("Telco_Churn.csv", header = T, na.strings = c(""))
+telChurn2<- read.csv("Telco_Churn.csv")
 telChurn2
 summary(telChurn2)#test null values & basic characteristics
 
