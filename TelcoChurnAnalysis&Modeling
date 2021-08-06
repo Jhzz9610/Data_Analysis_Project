@@ -1,18 +1,20 @@
 #data source: https://www.kaggle.com/blastchar/telco-customer-churn
 #Topic:Telco Churn Analysis
 #Language: R
-#Purpose of this project: 1)Find out the key characteristics of churn customers; 2)Build a model for predicting future possible churn
+#Project's aim: 1)Find out the key characteristics of churn customers; 
+#2)Build a model for predicting future possible churn
 
 #Load the data
 getwd()
 setwd('C:/Users/Elsazhang/Documents/dataProjects')
-telChurn2<- read.csv("Telco_Churn.csv")
+telChurn2<- read.csv("Telco_Churn.csv", header = T, na.strings = c(""))
 telChurn2
 summary(telChurn2)#test null values & basic characteristics
 
-#The reasons for having null values in Total Charges is because those clients are just with Telco(at month = 0); 
+#The reasons for having null values in Total Charges is because those
+#clients are just with Telco(at month = 0); 
 #In this case, I want to analyse the characteristics of churn customers,
-#total charge amount will have relation to tenure,
+#total charge amount will have strong relation to tenure,
 #so we will remove the columns related to charge amount later
 
 telChurn2$SeniorCitizen[telChurn2$SeniorCitizen == 0] <- "no"
@@ -20,16 +22,22 @@ telChurn2$SeniorCitizen[telChurn2$SeniorCitizen == 1] <- "yes"
 
 #Convert data type to factor
 str(telChurn2)
-for (i in c(2,3,4,5,7:18,21)){
-  telChurn2[,i] <- as.factor(telChurn2[,i])
+typeof(telChurn2$gender)
+length(telChurn2)
+for (i in c(1:length(telChurn2))){
+  if (typeof(telChurn2[,i]) == "character"){
+    telChurn2[,i] <- as.factor(telChurn2[,i])
+  }
 }
-str(telChurn2)
 summary(telChurn2)
-telChurn2 <-telChurn2[,-20] #remove unwanted columns
+#in this project, I want to focus on the characteristics of customers
+#So remove charges and id columns 
+telChurn2 <-telChurn2[,-20]
 telChurn2 <- telChurn2[,-19]
 telChurn2 <- telChurn2[,-1]
 
 #Divide into train & test group 
+dim(telChurn2)
 train_sub <- sample(nrow(telChurn2), 0.7*nrow(telChurn2))
 train_set <- telChurn2[train_sub,]
 test_set <- telChurn2[-train_sub,]
@@ -49,6 +57,7 @@ summary(churn.lg2)
 anova(object = churn.lg2, test = "Chisq")
 
 #using test group to test the model
+test_set
 prob <- predict(object = churn.lg2, newdata = test_set, type = "response")
 pred <- ifelse(prob >= 0.5, "yes", "no")
 pred <- factor(pred, levels = c("no", "yes"), order = TRUE)
@@ -60,8 +69,7 @@ summary(test_set)
 (309+1389)/(1389+181+234+309) #accuracy for this model = 0.804
 
 #draw roc curve
-roc_curve <- roc(test_set$churn,prob)
+roc_curve <- roc(test_set$Churn,prob)
 plot(roc_curve, print.auc=TRUE, auc.polygon=TRUE, grid=c(0.1, 0.2),
      grid.col=c("green", "red"), max.auc.polygon=TRUE,
      auc.polygon.col="skyblue") #AUC is 0.84, which indicates a good diagnostic ability
-
