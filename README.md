@@ -1,2 +1,2 @@
 # Data_Analysis_Project
-This repository stores some data analysis projects done by Elsa Zhang
+This repository stores data analysis projects done by Elsa Zhang.
